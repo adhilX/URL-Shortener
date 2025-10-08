@@ -8,4 +8,11 @@ export const loginController = async (req: Request, res: Response) => {
  }
 
 
+ export const registerController = async (req: Request, res: Response) => {
+    try {
+        res.send("Register endpoint");
+    } catch (error) {
+        res.status(500).send("Internal Server Error");
+    }
+ }
  
