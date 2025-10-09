@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { validationSchema } from "../validations/signupValidation";
 import { userSignup } from "../service/authService";
+import toast from "react-hot-toast";
 
 function Signup() {
   const navigation = useNavigate();
@@ -26,9 +27,11 @@ function Signup() {
       try {
 
         await userSignup(values);
+        toast.success("Signup successful! Please log in.");
         navigation("/login");
       } catch (error) {
         console.error("Error signing up:", error);
+        toast.error((error as Error).message || "Signup failed. Please try again.");
       }
     },
   });
