@@ -3,18 +3,26 @@ import { useFormik } from "formik";
 import { loginValidationSchema } from "../validations/loginValidation";
 import { userLogin } from "../service/authService";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+ 
 import toast from "react-hot-toast";
+import { setToken } from "../store/slice/userSlice";
+import { useEffect } from "react";
+import type { RootState } from "../store/store";
 
 function Login() {
-  const navigation = useNavigate();   
+  const navigation = useNavigate();
+  const dispatch = useDispatch();
+  const token = useSelector((state: RootState) => state.user.token);
+  console.log("Token in Login:", token);
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: loginValidationSchema,
-   onSubmit: async(values) => {
+    onSubmit: async (values) => {
       try {
-
-        await userLogin(values);
+        const result = await userLogin(values);
         toast.success("Login successful!");
+        dispatch(setToken(result.token))
         navigation("/");
       } catch (error) {
         console.error("Error logging in:", error);
@@ -22,6 +30,11 @@ function Login() {
       }
     },
   });
+  useEffect(()=>{
+   if(token){
+    navigation('/')
+  }
+  }, [token])
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-black relative overflow-hidden">

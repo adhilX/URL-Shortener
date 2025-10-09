@@ -1,5 +1,15 @@
 import { motion } from "framer-motion"
+import { useDispatch } from "react-redux"
+import { logout } from "../store/slice/userSlice"
+import { useNavigate } from "react-router-dom"
 function LogoutButton() {
+    const dispatch = useDispatch()
+    const navigator = useNavigate()
+
+   function handleLogout(){
+        dispatch(logout())
+     navigator('/login',{replace:true})
+    }
   return (
  <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -8,7 +18,7 @@ function LogoutButton() {
             className="flex justify-end mb-4"
           >
             <motion.button
-              onClick={() => console.log('Logout clicked')}
+              onClick={ handleLogout}
               whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(255, 255, 255, 0.2)" }}
               whileTap={{ scale: 0.95 }}
               className="px-4 py-2 bg-zinc-800 text-white rounded-lg border border-zinc-700 hover:bg-zinc-700 transition-all duration-300 flex items-center gap-2"

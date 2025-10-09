@@ -4,10 +4,13 @@ import { useFormik } from "formik";
 import { validationSchema } from "../validations/signupValidation";
 import { userSignup } from "../service/authService";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
 
 function Signup() {
   const navigation = useNavigate();
-
+  const token = useSelector((state: RootState) => state.user.token);    
   const {
     values,
     errors,
@@ -35,6 +38,12 @@ function Signup() {
       }
     },
   });
+
+  useEffect(() => {
+    if (token) {
+      navigation("/");
+    }
+  }, [token]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-black relative overflow-hidden">

@@ -10,7 +10,7 @@ function URLShortener() {
   const [shortUrl, setShortUrl] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [copied, setCopied] = useState(false);
-
+   
   const handleShorten = () => {
     if (longUrl) {
       // Generate a random short URL (in real app, this would be from backend)
@@ -30,8 +30,10 @@ function URLShortener() {
     setShortUrl('');
     setCopied(false);
   };
+  
 
- return (
+
+  return (
   <div className="flex items-center justify-center min-h-screen bg-black relative overflow-hidden">
     {/* Animated background orbs */}
     <motion.div
