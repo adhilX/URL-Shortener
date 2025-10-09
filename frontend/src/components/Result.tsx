@@ -70,7 +70,7 @@ function Result({longUrl,shortUrl,copied,handleCopy,handleReset}:{longUrl:string
                   Shorten Another
                 </motion.button>
                 <motion.button
-                  onClick={() => window.open(`https://${shortUrl}`, '_blank')}
+                  onClick={() => window.open(`${shortUrl}`, )}
                   whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(255, 255, 255, 0.3)" }}
                   whileTap={{ scale: 0.98 }}
                   className="py-3 bg-white text-black font-semibold rounded-xl shadow-lg shadow-white/20 hover:shadow-white/40 transition-all duration-300"

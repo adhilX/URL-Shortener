@@ -4,7 +4,7 @@ import { getShortURL, redirectURL } from '../controller/urlController';
 const urlRoute =  express.Router(); 
 
 
-urlRoute.post('/create-url', getShortURL);
+urlRoute.post('/create-shorturl', getShortURL);
 
 urlRoute.get('/:shortId', redirectURL);
 

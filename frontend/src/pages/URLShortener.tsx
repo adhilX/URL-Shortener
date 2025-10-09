@@ -4,18 +4,20 @@ import LogoutButton from '../components/LogoutButton';
 import Result from '../components/Result';
 import InfoSection from '../components/InfoSection';
 import ShortnerButton from '../components/ShortnerButton';
-
+import { createShortUrl } from '../service/urlService';
+const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:3000';
 function URLShortener() {
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [copied, setCopied] = useState(false);
    
-  const handleShorten = () => {
+  const handleShorten = async() => {
     if (longUrl) {
-      // Generate a random short URL (in real app, this would be from backend)
-      const randomId = Math.random().toString(36).substring(2, 8);
-      setShortUrl(`short.link/${randomId}`);
+      const result = await createShortUrl(longUrl);
+      const newUrl = BASE_URL+'/url/'+result.shortUrl;
+      console.log(newUrl);
+      setShortUrl(newUrl);
     }
   };
 
