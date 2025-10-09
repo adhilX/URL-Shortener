@@ -1,4 +1,4 @@
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import User from "../model/userSchema";
 import { StatusCode } from "../config/statusCode";
 import {comparePassword, hashPassword } from "../utils/passwordHash";
