@@ -90,7 +90,7 @@ function URLShortener() {
           className="text-center mb-8"
         >
           <div className="inline-block p-4 bg-white rounded-2xl mb-4 shadow-lg shadow-white/20">
-            <svg
+        setCopied    <svg
               className="w-12 h-12 text-black"
               fill="none"
               stroke="currentColor"
