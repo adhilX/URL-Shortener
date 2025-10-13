@@ -5,7 +5,7 @@ import Result from '../components/Result';
 import InfoSection from '../components/InfoSection';
 import ShortnerButton from '../components/ShortnerButton';
 import { createShortUrl } from '../service/urlService';
-const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:3000';
+const BASE_URL = import.meta.env.VITE_URL ;
 function URLShortener() {
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
