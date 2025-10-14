@@ -1,21 +1,17 @@
 import { Request, Response } from "express";
-import urlModel from "../model/urlSchema";
 import { StatusCode } from "../config/statusCode";
-import generateShortURL from "../utils/shortURL";
-
+import { urlService } from "../Di/urlDi";
 export const getShortURL = async (req: Request, res: Response): Promise<void> => {
 
     try {
         const { longUrl } = req.body
 
-        const existsUrl = await urlModel.findOne({ longUrl })
-
-        if (existsUrl) {
-            res.status(StatusCode.OK).json({ shortUrl: existsUrl.shortUrl })
+       const { shortUrl, isNew } = await urlService.createShortUrl(longUrl)
+        if (isNew) {
+            res.status(StatusCode.CREATED).json({ shortUrl })
             return
         }
-        const url = await urlModel.create({ longUrl, shortUrl: generateShortURL() })
-        res.status(StatusCode.CREATED).json({ shortUrl: url.shortUrl })
+        res.status(StatusCode.OK).json({ shortUrl })
         return
     } catch (error) {
         if (error instanceof Error) {
@@ -31,11 +27,9 @@ export const getShortURL = async (req: Request, res: Response): Promise<void> =>
 export const redirectURL = async (req: Request, res: Response): Promise<void> => {
     try {
         const { shortId } = req.params;
-        const url = await urlModel.findOne({ shortUrl: shortId });
-        if (url) {
-            url.history.push(new Date().toISOString());
-            await url.save();
-            res.redirect(url.longUrl);
+        const longUrl = await urlService.getLongUrl(shortId);
+        if (longUrl) {
+            res.redirect(longUrl);
             return;
         } else {
             res.status(StatusCode.NOT_FOUND).json({ message: 'URL not found' });

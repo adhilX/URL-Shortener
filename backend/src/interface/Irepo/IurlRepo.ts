@@ -1,0 +1,7 @@
+import { IUrl } from "../../entity/Iurl";
+import { IBaseRepo } from "./IbaseRepo";
+
+export interface IUrlRepo extends IBaseRepo<IUrl> {
+    findByLongUrl(longUrl: string): Promise<IUrl | null>;
+    addHistory(shortUrl: string, history: string): Promise<void>;
+}
