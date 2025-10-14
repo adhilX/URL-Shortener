@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { Document } from 'mongoose';
 
 
-export interface IURL extends Document {
+export interface MongooseUrl extends Document {
     longUrl: string;
     shortUrl: string;
     history: string[];
@@ -17,5 +17,5 @@ const urlSchema = new mongoose.Schema({
    },{ timestamps: true});
 
 
-   const urlModel = mongoose.model<IURL>('URL', urlSchema);
+   const urlModel = mongoose.model<MongooseUrl>('URL', urlSchema);
 export default urlModel;

@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import { IBaseRepo } from "../Irepo/IbaseRepo";
+import { IBaseRepo } from "../interface/Irepo/IbaseRepo";
 
 export default class BaseRepo<TPersistence, TDomain> implements IBaseRepo<TDomain> {
     constructor(protected model: Model<TPersistence>) { }

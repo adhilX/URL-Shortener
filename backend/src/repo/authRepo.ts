@@ -1,5 +1,5 @@
 import { IUser } from "../entity/user";
-import { IUserRepo } from "../Irepo/IuserRepo";
+import { IUserRepo } from "../interface/Irepo/IuserRepo";
 import User, { MongooseUser } from "../model/userSchema";
 import BaseRepo from "./baseRepo";
 

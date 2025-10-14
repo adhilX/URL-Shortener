@@ -1,3 +1,15 @@
-export default class UrlRepo {  
+import { IUrl } from "../entity/Iurl";
+import { IUrlRepo } from "../interface/Irepo/IurlRepo";
+import urlModel, { MongooseUrl } from "../model/urlSchema";
+import BaseRepo from "./baseRepo";
 
+export default class UrlRepo extends BaseRepo<MongooseUrl, IUrl> implements IUrlRepo{  
+    constructor() { 
+        super(urlModel);
+    }
+    
+    async findByLongUrl(longUrl: string): Promise<IUrl | null> {
+        const record = await this.model.findOne({ longUrl });
+        return record ? this.toEntity(record) : null;
+    }
 }
