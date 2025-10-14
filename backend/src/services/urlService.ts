@@ -17,4 +17,18 @@ export class UrlService implements IUrlService{
         const url = await this.urlRepo.create(newUrl);
         return { shortUrl: url.shortUrl, isNew: true };
     }
+
+
+    async getLongUrl(shortUrl: string): Promise<string | null> {
+        const url = await this.urlRepo.findByShortUrl(shortUrl);
+        if (!url) {
+            return null;
+        }
+        
+       await this.urlRepo.addHistory(url.shortUrl, new Date().toISOString());
+        
+      
+        return url.longUrl;
+    }
+
 }
