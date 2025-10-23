@@ -5,7 +5,7 @@ import type IUser from "../types/IUser";
 export const userLogin = async ({email, password}: {email: string, password: string}) => {
   try {
     const response = await axiosInstance.post("/login", {email, password}, {
-      withCredentials: true // Important for cookies
+      withCredentials: true 
     });
     return response?.data;
   } catch (error) {

@@ -8,7 +8,6 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((config) => {
-  console.log('baseURL:', import.meta.env.VITE_BASE_URL);
   const token = store.getState().user.token;
   if (token) {
     config.headers['x-access-token'] = token;

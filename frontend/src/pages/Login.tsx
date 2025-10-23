@@ -14,7 +14,6 @@ function Login() {
   const navigation = useNavigate();
   const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.user.token);
-  console.log("Token in Login:", token);
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: loginValidationSchema,
