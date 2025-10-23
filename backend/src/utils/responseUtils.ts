@@ -1,6 +1,6 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { StatusCode } from '../config/statusCode';
-
+import { IUser } from '../entity/user';
 export const handleControllerError = (
     error: unknown, 
     res: Response, 
@@ -20,12 +20,12 @@ export const handleUnauthorized = (res: Response, message: string = "User not au
     res.status(StatusCode.UNAUTHORIZED).json({ message });
 };
 
-export const formatUserResponse = (user: any) => ({
+export const formatUserResponse = (user: IUser) => ({
     _id: user._id,
     name: user.name,
     email: user.email
 });
 
-export const getUserFromRequest = (req: any): string | null => {
+export const getUserFromRequest = (req:any): string | null => {
     return req.user?.id || null;
 };
