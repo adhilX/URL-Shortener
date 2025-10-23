@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { StatusCode } from "../config/statusCode";
 import { authService } from "../Di/authDi";
+import { setRefreshTokenCookie, clearRefreshTokenCookie } from "../utils/cookieUtils";
+import { handleControllerError, formatUserResponse } from "../utils/responseUtils";
 export const registerController = async (req: Request, res: Response):Promise<void> => {
 
      const { name, email, password } = req.body.user;
@@ -8,40 +10,64 @@ export const registerController = async (req: Request, res: Response):Promise<vo
        const user = await authService.registerUser({ name, email, password })
          res.status(StatusCode.CREATED).json({
               message: "User registered successfully",
-              user: {
-                   _id: user._id,
-                   name: user.name,
-                   email: user.email,
-              }
+              user: formatUserResponse(user)
          })
          return
      } catch (error) {
-          if (error instanceof Error) {
-               console.log("registerUser ERROR :", error);
-               res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ message: error.message });
-               return
-          }
-          res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ message: "Unknown error occurred" });
-          return
+          handleControllerError(error, res, "registerUser");
      }
 };
 
 
 
-export const loginController = async (req: Request, res: Response):Promise<void>  => {
+export const loginController = async (req: Request, res: Response): Promise<void> => {
      const { email, password } = req.body;
      console.log(email, password);
      try {
-         const { user, token } = await authService.loginUser(email, password)
-          res.status(StatusCode.OK).json({ message: 'User logged in successfully', token, user });
+         const { user, accessToken, refreshToken } = await authService.loginUser(email, password);
+         
+         setRefreshTokenCookie(res, refreshToken);
+
+         res.status(StatusCode.OK).json({ 
+             message: 'User logged in successfully', 
+             accessToken, 
+             user: formatUserResponse(user)
+         });
 
      } catch (error) {
-          if (error instanceof Error) {
-               console.log("loginUser ERROR:", error);
-               res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ message: error.message });
-               return
-          }
-          res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ message: "Unknown error occurred" });
-          return
+          handleControllerError(error, res, "loginUser");
      }
+};
+
+export const refreshTokenController = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const refreshToken = req.cookies.refreshToken;
+        
+        if (!refreshToken) {
+            res.status(StatusCode.UNAUTHORIZED).json({ message: "Refresh token not found" });
+            return;
+        }
+
+        const { accessToken, refreshToken: newRefreshToken } = await authService.refreshToken(refreshToken);
+        
+        setRefreshTokenCookie(res, newRefreshToken);
+
+        res.status(StatusCode.OK).json({ 
+            message: 'Token refreshed successfully', 
+            accessToken 
+        });
+
+    } catch (error) {
+        handleControllerError(error, res, "refreshToken", StatusCode.UNAUTHORIZED);
+    }
+};
+
+export const logoutController = async (req: Request, res: Response): Promise<void> => {
+    try {
+        clearRefreshTokenCookie(res);
+
+        res.status(StatusCode.OK).json({ message: 'Logged out successfully' });
+    } catch (error) {
+        handleControllerError(error, res, "logout");
+    }
 };

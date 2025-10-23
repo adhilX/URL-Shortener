@@ -2,13 +2,19 @@ import { motion } from "framer-motion"
 import { useDispatch } from "react-redux"
 import { logout } from "../store/slice/userSlice"
 import { useNavigate } from "react-router-dom"
+import { userLogout } from "../service/authService"
 function LogoutButton() {
     const dispatch = useDispatch()
     const navigator = useNavigate()
 
-   function handleLogout(){
-        dispatch(logout())
-     navigator('/login',{replace:true})
+   async function handleLogout(){
+        try {
+            await userLogout()
+            dispatch(logout())
+            navigator('/login',{replace:true})
+        } catch (error) {
+            console.error('Logout failed:', error)
+        }
     }
   return (
  <motion.div

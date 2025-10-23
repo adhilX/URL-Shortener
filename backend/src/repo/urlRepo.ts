@@ -9,12 +9,12 @@ export default class UrlRepo extends BaseRepo<MongooseUrl, IUrl> implements IUrl
     }
     
     async findByLongUrl(longUrl: string): Promise<IUrl | null> {
-        const record = await this.model.findOne({ longUrl });
+        const record = await this._model.findOne({ longUrl });
         return record ? this.toEntity(record) : null;
     }
 
     async addHistory(shortUrl: string, history: string): Promise<void> {
-        const record = await this.model.findOne({ shortUrl });
+        const record = await this._model.findOne({ shortUrl });
         console.log(record);
         console.log(shortUrl, history);
         if (!record) {
@@ -22,5 +22,10 @@ export default class UrlRepo extends BaseRepo<MongooseUrl, IUrl> implements IUrl
         }
         record.history.push(history);
         await record.save();
+    }
+
+    async findByUserId(userId: string): Promise<IUrl[]> {
+        const records = await this._model.find({ userId }).sort({ createdAt: -1 });
+        return records.map(record => this.toEntity(record));
     }
 }

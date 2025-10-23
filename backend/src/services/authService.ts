@@ -1,34 +1,58 @@
 import { IUser } from "../entity/user";
 import { IUserRepo } from "../interface/Irepo/IuserRepo";
 import { hashPassword, comparePassword } from "../utils/passwordHash";
-import { accessToken } from "../utils/jwt";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/jwt";
 import { IAuthService } from "../interface/Iservices/IAuthService";
+import { JwtPayload } from "jsonwebtoken";
 
 export class AuthService implements IAuthService {
-    constructor(private authRepo: IUserRepo) { }
+    constructor(private _authRepo: IUserRepo) { }
 
     async registerUser(userData: IUser): Promise<IUser> {
         const { name, email, password } = userData;
-        const existEmail = await this.authRepo.findByEmail(email);
+        const existEmail = await this._authRepo.findByEmail(email);
 
         if (existEmail) {
             throw new Error("User already exists");
         }
         const HashedPass = await hashPassword(password);
-        const user = await this.authRepo.create({ name, email, password: HashedPass });
+        const user = await this._authRepo.create({ name, email, password: HashedPass });
         return user;
     }
 
-    async loginUser(email: string, password: string): Promise<{ user: IUser; token: string }> {
-        const existUser = await this.authRepo.findByEmail(email);
+    async loginUser(email: string, password: string): Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
+        const existUser = await this._authRepo.findByEmail(email);
         if (!existUser) {
-            throw new Error("User not found")   ;
+            throw new Error("User not found");
         }
         const passCompare = await comparePassword(password, existUser.password);
         if (!passCompare) {
             throw new Error("Password does not match");
         }
-        const token = accessToken({ id: existUser._id });
-        return { user: existUser, token };
+        
+        const payload = { id: existUser._id, email: existUser.email };
+        const accessToken = generateAccessToken(payload);
+        const refreshToken = generateRefreshToken(payload);
+        
+        return { user: existUser, accessToken, refreshToken };
+    }
+
+    async refreshToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
+        try {
+            const decoded = verifyRefreshToken(refreshToken) as JwtPayload;
+            const user = await this._authRepo.findById(decoded.id);
+            
+            if (!user) {
+                throw new Error("User not found");
+            }
+            
+            const payload = { id: user._id, email: user.email };
+            const newAccessToken = generateAccessToken(payload);
+            const newRefreshToken = generateRefreshToken(payload);
+            
+            return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+        } catch (error) {
+            throw new Error("Invalid refresh token");
+        }
     }
 }

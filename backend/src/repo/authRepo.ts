@@ -7,5 +7,10 @@ export default class AuthRepo extends BaseRepo<MongooseUser, IUser> implements I
     constructor() {
         super(User);
     }
+
+    async findById(id: string): Promise<IUser | null> {
+        const user = await this._model.findById(id);
+        return user ? this.toEntity(user) : null;
+    }
 }
 
