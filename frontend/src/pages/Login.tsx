@@ -22,7 +22,7 @@ function Login() {
       try {
         const result = await userLogin(values);
         toast.success("Login successful!");
-        dispatch(setToken(result.token))
+        dispatch(setToken(result.accessToken))
         navigation("/");
       } catch (error) {
         console.error("Error logging in:", error);

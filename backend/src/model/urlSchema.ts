@@ -4,6 +4,7 @@ import { Document } from 'mongoose';
 
 export interface MongooseUrl extends Document {
     longUrl: string;
+    userId: string;
     shortUrl: string;
     history: string[];
     createdAt: Date;
@@ -12,6 +13,7 @@ export interface MongooseUrl extends Document {
 
 const urlSchema = new mongoose.Schema({
     longUrl: { type: String, required: true },
+    userId: { type: String, required: true },
     shortUrl: { type: String, required: true, unique: true },
     history: { type: Array, default: [] },
    },{ timestamps: true});

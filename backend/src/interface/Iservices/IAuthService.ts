@@ -2,5 +2,6 @@ import { IUser } from "../../entity/user";
 
 export interface IAuthService {
     registerUser(userData: IUser): Promise<IUser>;
-    loginUser(email: string, password: string): Promise<{ user: IUser; token: string }>;
+    loginUser(email: string, password: string): Promise<{ user: IUser; accessToken: string; refreshToken: string }>;
+    refreshToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }>;
 }
