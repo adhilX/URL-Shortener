@@ -24,8 +24,25 @@ export default class UrlRepo extends BaseRepo<MongooseUrl, IUrl> implements IUrl
         await record.save();
     }
 
-    async findByUserId(userId: string): Promise<IUrl[]> {
-        const records = await this._model.find({ userId }).sort({ createdAt: -1 });
-        return records.map(record => this.toEntity(record));
+    async findByUserId(userId: string, page: number, limit: number, search?: string): Promise<{ data: IUrl[]; total: number }> {
+        const filter: any = { userId };
+        if (search && search.trim()) {
+            const regex = new RegExp(search.trim(), 'i');
+            filter.$or = [
+                { longUrl: regex },
+                { shortUrl: regex },
+            ];
+        }
+
+        const total = await this._model.countDocuments(filter);
+        const skip = (page - 1) * limit;
+
+        const records = await this._model
+            .find(filter)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        return { data: records.map(record => this.toEntity(record)), total };
     }
 }

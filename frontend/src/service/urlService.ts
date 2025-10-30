@@ -11,9 +11,11 @@ export const createShortUrl = async (longUrl: string) => {
     }
   };
 
-export const getUserHistory = async (): Promise<IUrlHistory[]> => {
+export const getUserHistory = async (
+  params?: { page?: number; limit?: number; search?: string }
+): Promise<{ items: IUrlHistory[]; page: number; limit: number; total: number; totalPages: number }> => {
   try {
-    const response = await axiosInstance.get("/url/user-history");
+    const response = await axiosInstance.get("/url/user-history", { params });
     return response.data;
   } catch (error) {
     console.error("Error fetching user history:", error);

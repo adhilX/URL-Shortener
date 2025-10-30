@@ -62,9 +62,20 @@ export const getUserHistory = async (req: Request, res: Response): Promise<void>
             return;
         }
 
-        const history = await urlService.getUserHistory(userId);
-        console.log(history);
-        res.status(StatusCode.OK).json(history);
+        const page = Math.max(parseInt((req.query.page as string) || '1', 10), 1);
+        const limit = Math.max(Math.min(parseInt((req.query.limit as string) || '10', 10), 100), 1);
+        const search = (req.query.search as string) || undefined;
+
+        const { data, total } = await urlService.getUserHistory(userId, page, limit, search);
+        const totalPages = Math.ceil(total / limit) || 1;
+
+        res.status(StatusCode.OK).json({
+            items: data,
+            page,
+            limit,
+            total,
+            totalPages
+        });
         return;
     } catch (error) {
         if (error instanceof Error) {

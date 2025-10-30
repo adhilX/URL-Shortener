@@ -31,8 +31,8 @@ export class UrlService implements IUrlService{
         return url.longUrl;
     }
 
-    async getUserHistory(userId: string): Promise<IUrl[]> {
-        return await this._urlRepo.findByUserId(userId);
+    async getUserHistory(userId: string, page: number, limit: number, search?: string): Promise<{ data: IUrl[]; total: number }> {
+        return await this._urlRepo.findByUserId(userId, page, limit, search);
     }
 
 }
