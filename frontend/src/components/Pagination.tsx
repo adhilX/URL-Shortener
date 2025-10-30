@@ -9,7 +9,7 @@ interface PaginationProps {
 
 export default function Pagination({ page, totalPages, onPrev, onNext }: PaginationProps) {
   return (
-    <div className="flex items-center justify-center gap-4">
+    <div className="flex items-center justify-center gap-4 w-full mt-2">
       <motion.button
         onClick={onPrev}
         disabled={page === 1}
