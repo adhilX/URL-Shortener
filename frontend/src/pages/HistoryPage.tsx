@@ -120,6 +120,25 @@ function HistoryPage() {
         </motion.div>
 
         {/* Global Search Bar (outside list to preserve focus) */}
+
+        {/* Title Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-center mb-12"
+        >
+          <div className="inline-block p-4 bg-white rounded-2xl mb-4 shadow-lg shadow-white/20">
+            <svg className="w-12 h-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h1 className="text-4xl font-bold text-white mb-2">URL History</h1>
+          <p className="text-gray-400">
+            View and manage all your shortened URLs
+          </p>
+        </motion.div>
+
         <div className="mb-6">
           <div className="max-w-xl">
             <div className="relative group">
@@ -148,25 +167,6 @@ function HistoryPage() {
             </div>
           </div>
         </div>
-
-        {/* Title Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-center mb-12"
-        >
-          <div className="inline-block p-4 bg-white rounded-2xl mb-4 shadow-lg shadow-white/20">
-            <svg className="w-12 h-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h1 className="text-4xl font-bold text-white mb-2">URL History</h1>
-          <p className="text-gray-400">
-            View and manage all your shortened URLs
-          </p>
-        </motion.div>
-
         {/* Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
