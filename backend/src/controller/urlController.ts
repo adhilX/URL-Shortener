@@ -54,7 +54,7 @@ export const redirectURL = async (req: Request, res: Response): Promise<void> =>
 
 export const getUserHistory = async (req: Request, res: Response): Promise<void> => {
     try {
-        // Extract userId from the token (assuming it's added by middleware)
+
         const userId = (req as any).user?.id;
         
         if (!userId) {
@@ -62,12 +62,12 @@ export const getUserHistory = async (req: Request, res: Response): Promise<void>
             return;
         }
 
-        const page = Math.max(parseInt((req.query.page as string) || '1', 10), 1);
-        const limit = Math.max(Math.min(parseInt((req.query.limit as string) || '10', 10), 100), 1);
-        const search = (req.query.search as string) || undefined;
+        const page = parseInt(req.query.page as string) 
+        const limit = parseInt(req.query.limit as string)
+        const search = (req.query.search as string) 
 
         const { data, total } = await urlService.getUserHistory(userId, page, limit, search);
-        const totalPages = Math.ceil(total / limit) || 1;
+        const totalPages = Math.ceil(total / limit) 
 
         res.status(StatusCode.OK).json({
             items: data,
